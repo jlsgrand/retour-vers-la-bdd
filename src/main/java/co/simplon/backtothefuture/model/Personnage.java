@@ -30,7 +30,13 @@ public class Personnage {
 
     public void savePersonnage(Connection connection) throws SQLException {
         Statement ordreSQL = connection.createStatement();
-        ordreSQL.execute("INSERT INTO personnage (prenom, nom) VALUES ('" + prenom + "','" + nom + "')");
+        ordreSQL.execute("INSERT INTO personnage (prenom, nom) VALUES ('" + prenom + "','" + nom + "')", Statement.RETURN_GENERATED_KEYS);
+
+        ResultSet rs = ordreSQL.getGeneratedKeys();
+        if (rs.next()) {
+            id = rs.getInt(1);
+        }
+
         ordreSQL.close();
     }
 
@@ -46,8 +52,6 @@ public class Personnage {
                     resultats.getString("prenom"),
                     resultats.getString("nom"));
             personnageList.add(dbPersonnage);
-
-            System.out.println(dbPersonnage);
         }
 
         resultats.close();

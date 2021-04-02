@@ -5,6 +5,7 @@ import co.simplon.backtothefuture.model.Personnage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -23,7 +24,10 @@ public class App {
         try {
             Connection connection = DriverManager.getConnection(url, user, password);
 
-            Personnage.getPersonnages(connection);
+            List<Personnage> personnageList = Personnage.getPersonnages(connection);
+            for (Personnage personnage : personnageList) {
+                System.out.println(personnage);
+            }
 
             System.out.println("Coucou, entre un nouveau personnage");
             System.out.println("Donne moi le prenom du nouveau perso stp : ");
@@ -33,15 +37,12 @@ public class App {
 
             Personnage nouveauPerso = new Personnage(prenom, nom);
             nouveauPerso.savePersonnage(connection);
-
-            Personnage.getPersonnages(connection);
+            System.out.println(nouveauPerso);
 
             connection.close();
 
         } catch (SQLException exception) {
-            // Ma gestion du problème
-            System.out.println("Erreur de connexion à la base de données");
-            // exception.printStackTrace();
+            exception.printStackTrace();
         }
 
     }
